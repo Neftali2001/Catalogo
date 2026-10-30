@@ -1,0 +1,8 @@
+# Entornos y dependencias
+venv/
+__pycache__/
+node_modules/
+dist/
+
+# Variables de entorno (¡Crítico!)
+.env
