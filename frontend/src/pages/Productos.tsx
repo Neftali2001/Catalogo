@@ -73,7 +73,7 @@ const Productos = () => {
     const productosFiltrados = useMemo(() => {
         return productos.filter(prod => {
             const coincideTexto = prod.nombre.toLowerCase().includes(busqueda.toLowerCase()) ||
-                                  prod.categoria.toLowerCase().includes(busqueda.toLowerCase());
+                                 String( prod.categoria).toLowerCase().includes(busqueda.toLowerCase());
             const coincideEstado = filtroEstado === 'todos' || prod.estado === filtroEstado;
             return coincideTexto && coincideEstado;
         });
@@ -118,7 +118,7 @@ const Productos = () => {
                 </div>
             </div>
 
-            {/* ========== VISTA MÓVIL: tarjetas (visible solo en pantallas < md) ========== */}
+            {/* ===VISTA MÓVIL==== */}
             <div className="d-md-none">
                 {sinResultados ? (
                     <div className="text-center py-4 text-muted bg-white rounded shadow-sm">
@@ -183,7 +183,6 @@ const Productos = () => {
                 )}
             </div>
 
-            {/* ========== VISTA ESCRITORIO / TABLET: tabla (visible desde md) ========== */}
             <div className="table-responsive shadow-sm rounded bg-white d-none d-md-block">
                 <table className="table table-hover align-middle mb-0">
                     <thead className="table-dark">
@@ -191,7 +190,7 @@ const Productos = () => {
                             <th>ID</th>
                             <th>Nombre</th>
                             <th>Categoría</th>
-                            <th>Precio</th>
+                            <th>Precios</th>
                             <th>Stock</th>
                             <th>Estado</th>
                             <th className="text-center">Acciones</th>

@@ -3,11 +3,21 @@ export interface Producto {
     nombre: string;
     descripcion?: string;
     precio: number;
-    categoria: string;
+    categoria: number;
     stock: number;
     estado: 'activo' | 'inactivo';
     fecha_registro: string;
+    
 }
+
+export interface Categoria {
+
+    id: number;
+    nombre: string;
+
+}
+
+
 
 export interface Usuario {
     id: number;

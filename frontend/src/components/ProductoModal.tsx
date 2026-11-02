@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form, Alert } from 'react-bootstrap';
-import type { Producto } from '../types';
+import type { Producto, Categoria } from '../types';
+// import type { Categoria } from '../types';
+import api from '../services/api'
+
+
+
 
 interface ProductoModalProps {
     show: boolean;
@@ -9,12 +14,20 @@ interface ProductoModalProps {
     productoEditar?: Producto | null;
 }
 
+
+
 const ProductoModal: React.FC<ProductoModalProps> = ({ show, handleClose, onSave, productoEditar }) => {
+
+
+
+    const [categorias, setCategorias]= useState<Categoria[]>([]);
+
+
     const estadoInicial = {
         nombre: '',
         descripcion: '',
         precio: 0,
-        categoria: '',
+        categoria: '' as string | number,
         stock: 0,
         estado: 'activo' as 'activo' | 'inactivo'
     };
@@ -22,6 +35,37 @@ const ProductoModal: React.FC<ProductoModalProps> = ({ show, handleClose, onSave
     const [formData, setFormData] = useState(estadoInicial);
     const [error, setError] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+
+    useEffect (()=> {
+
+
+        const fetchCategorias = async () =>{
+
+        try {
+            const response = await api.get('categoria/');
+            const datosCategoria = Array.isArray(response.data)
+            ? response.data
+            : (response.data.results || []);
+            setCategorias(datosCategoria);
+            // const data = Array.isArray( response.data) ? response.data : (response.data.results || []);
+            // setCategorias(data);
+
+        }
+        catch (err) 
+        {
+            console.error('Error al caragar las categorias', err);
+        }
+        };
+        if (show) {
+            fetchCategorias();
+        }
+    })
+
+
+
+
+
 
     useEffect(() => {
         if (productoEditar) {
@@ -59,7 +103,14 @@ const ProductoModal: React.FC<ProductoModalProps> = ({ show, handleClose, onSave
         try {
             setIsSubmitting(true);
             setError('');
-            await onSave(formData);
+            const datosAEnviar = {
+                ...formData,
+                categoria: Number(formData.categoria),
+                precio: Number(formData.precio),
+                stock: Number(formData.stock)
+
+            }
+            await onSave(datosAEnviar);
             handleClose();
         } catch (err: any) {
             setError(err.response?.data?.detail || 'Error al guardar el producto. Verifica los datos.');
@@ -90,14 +141,15 @@ const ProductoModal: React.FC<ProductoModalProps> = ({ show, handleClose, onSave
 
                     <div className="row">
                         <Form.Group className="mb-3 col-md-6">
-                            <Form.Label>Categoría <span className="text-danger">*</span></Form.Label>
-                            <Form.Control 
-                                type="text" 
-                                name="categoria" 
-                                value={formData.categoria} 
-                                onChange={handleChange} 
-                                required 
-                            />
+                            <Form.Label>Categoria</Form.Label>
+                            <Form.Select name="categoria" value={formData.categoria} onChange={handleChange}>
+                              <option value="">Categorias</option> 
+                             {categorias.map((cat)=>(
+                                <option key={cat.id} value={cat.id}>
+                                {cat.nombre}
+                                </option>
+                             ))}
+                            </Form.Select>
                         </Form.Group>
 
                         <Form.Group className="mb-3 col-md-6">

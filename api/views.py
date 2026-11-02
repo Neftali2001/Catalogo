@@ -1,10 +1,21 @@
 from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.db.models import Count, Sum, F
 from .models import Producto, Usuario
 from .serializers import ProductoSerializer, UsuarioSerializer
+from.models import Categoria
+from.serializers import CategoriaSerializer
+
+
+
+
+class CategoriaViewSet(viewsets.ModelViewSet):
+    queryset = Categoria.objects.all()
+    serializer_class = CategoriaSerializer
+    permission_classes = [AllowAny]
+
 
 class UsuarioViewSet(viewsets.ModelViewSet):
     queryset = Usuario.objects.all()

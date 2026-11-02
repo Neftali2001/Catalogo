@@ -8,7 +8,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 from datetime import timedelta
 
-
+# Cargar las variables de entorno desde el archivo .env
 load_dotenv()
 
 
@@ -17,9 +17,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-0bn4&9ex7*in_tqky@zitn05$c29%t+ct@x@^ee4zj=)w&9-0&')
 
-DEBUG = os.getenv('DEBUG', 'True') == 'True'
+DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -65,25 +65,20 @@ TEMPLATES = [
 WSGI_APPLICATION = 'core.wsgi.application'
 
 
-
-
-
-
-
-
- DATABASES = {
+# Database - Configurado para PostgreSQL leyendo desde .env
+DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DB_NAME'),
-        'USER': os.environ.get('DB_USER'),
-         'PASSWORD': os.environ.get('DB_PASSWORD'),
-        'HOST': os.environ.get('DB_HOST'),
-        'PORT': os.environ.get('DB_PORT', '5432'),
+        'NAME': os.getenv('DB_NAME', 'postgres'),
+        'USER': os.getenv('DB_USER', 'postgres'),
+        'PASSWORD': os.getenv('DB_PASSWORD', 'WH3mgRn733'),
+        'HOST': os.getenv('DB_HOST', 'localhost'),
+        'PORT': os.getenv('DB_PORT', '5432'),
     }
- }
+}
 
 
-
+# Password validation
 AUTH_PASSWORD_VALIDATORS = [
     { 'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator', },
     { 'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator', },
@@ -92,8 +87,8 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-
-LANGUAGE_CODE = 'es-mx' 
+# Internationalization
+LANGUAGE_CODE = 'es-mx'  
 
 TIME_ZONE = 'America/Mexico_City'
 
@@ -111,12 +106,14 @@ MAILERS = {
     },
 }
 
-
+# 1. Modelo de usuario personalizado
 AUTH_USER_MODEL = 'api.Usuario'
-
 
 CORS_ALLOWED_ORIGINS = [
     os.getenv("FRONTEND_URL", "http://localhost:5173"), 
+    "http://localhost:5173",
+    "http://localhost:5174",
+    "http://localhost:5175",
 ]
 
 
@@ -133,4 +130,3 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
 }
-
